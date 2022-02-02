@@ -21,6 +21,9 @@ import java.util.List;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.apicurio.datamodels.compat.JsonCompat;
 import io.apicurio.datamodels.core.Constants;
+import io.apicurio.datamodels.core.diff.DiffContext;
+import io.apicurio.datamodels.core.diff.OriginalOas30DiffVisitor;
+import io.apicurio.datamodels.core.diff.UpdatedOas30DiffVisitor;
 import io.apicurio.datamodels.core.factories.DocumentFactory;
 import io.apicurio.datamodels.core.factories.VisitorFactory;
 import io.apicurio.datamodels.core.io.DataModelReader;
@@ -48,7 +51,7 @@ import io.apicurio.datamodels.openapi.visitors.dereference.Dereferencer;
 import io.apicurio.datamodels.openapi.visitors.transform.Oas20to30TransformationVisitor;
 
 /**
- * The most common entry points into using the data models library.  Provides convenience methods
+ * The most common entry points into using the data models library. Provides convenience methods
  * for performing common actions such as i/o, visiting, and validation.
  * @author eric.wittmann@gmail.com
  * @author Jakub Senko <jsenko@redhat.com>
@@ -135,6 +138,15 @@ public class Library {
         visitTree(node, validator, TraverserDirection.down);
         
         return validator.getValidationProblems();
+    }
+
+    public static DiffContext diff(Node original, Node updated) {
+       DiffContext rootContext = DiffContext.createRootContext();
+       UpdatedOas30DiffVisitor diffVisitor = new UpdatedOas30DiffVisitor(rootContext, original);
+       visitTree(updated, diffVisitor, TraverserDirection.down);
+//       OriginalOas30DiffVisitor ogDiffVisitor = new OriginalOas30DiffVisitor(rootContext, updated);
+//       visitTree(original, ogDiffVisitor, TraverserDirection.down);
+       return rootContext;
     }
     
     /**
