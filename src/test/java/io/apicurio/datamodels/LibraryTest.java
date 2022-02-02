@@ -16,12 +16,19 @@
 
 package io.apicurio.datamodels;
 
+import com.fasterxml.jackson.core.JsonParser;
+import io.apicurio.datamodels.core.diff.DiffContext;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import org.junit.Assert;
 import org.junit.Test;
 
 import io.apicurio.datamodels.core.models.Document;
 import io.apicurio.datamodels.core.models.DocumentType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Tests for the {@link Library} class.
@@ -62,4 +69,13 @@ public class LibraryTest {
         Assert.assertEquals("3.0.2", ((Oas30Document) doc).openapi);
     }
 
+    @Test
+    public void testDiff() {
+        String oasOld = "{\"openapi\":\"3.0.0\",\"info\":{\"version\":\"1.0.0\",\"title\":\"Swagger Petstore\",\"license\":{\"name\":\"MIT\"}},\"servers\":[{\"url\":\"http://petstore.swagger.io/v1\"}],\"paths\":{\"/pets\":{\"get\":{\"summary\":\"List all pets\",\"operationId\":\"listPets\",\"tags\":[\"pets\"]}}}}";
+        String oasNew = "{\"openapi\":\"3.0.0\",\"info\":{\"version\":\"1.0.0\",\"title\":\"Swagger Petstore\",\"license\":{\"name\":\"MIT\"}},\"servers\":[{\"url\":\"http://petstore.swagger.io/v1\"}],\"paths\":{\"/pets/{petId}\":{\"get\":{\"summary\":\"Info for a specific pet\",\"operationId\":\"showPetById\",\"tags\":[\"pets\"]}}}}";
+        Document oldDoc = Library.readDocumentFromJSONString(oasOld);
+        Document newDoc = Library.readDocumentFromJSONString(oasNew);
+        DiffContext diffContext = Library.diff(oldDoc, newDoc);
+        Assert.assertEquals(1, diffContext.getDifferences().size());
+    }
 }
