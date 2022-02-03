@@ -22,8 +22,7 @@ import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.apicurio.datamodels.compat.JsonCompat;
 import io.apicurio.datamodels.core.Constants;
 import io.apicurio.datamodels.core.diff.DiffContext;
-import io.apicurio.datamodels.core.diff.OriginalOas30DiffVisitor;
-import io.apicurio.datamodels.core.diff.UpdatedOas30DiffVisitor;
+import io.apicurio.datamodels.core.diff.Oas30DiffVisitor;
 import io.apicurio.datamodels.core.factories.DocumentFactory;
 import io.apicurio.datamodels.core.factories.VisitorFactory;
 import io.apicurio.datamodels.core.io.DataModelReader;
@@ -142,10 +141,8 @@ public class Library {
 
     public static DiffContext diff(Node original, Node updated) {
        DiffContext rootContext = DiffContext.createRootContext();
-       UpdatedOas30DiffVisitor diffVisitor = new UpdatedOas30DiffVisitor(rootContext, original);
+       Oas30DiffVisitor diffVisitor = new Oas30DiffVisitor(rootContext, original);
        visitTree(updated, diffVisitor, TraverserDirection.down);
-//       OriginalOas30DiffVisitor ogDiffVisitor = new OriginalOas30DiffVisitor(rootContext, updated);
-//       visitTree(original, ogDiffVisitor, TraverserDirection.down);
        return rootContext;
     }
     
