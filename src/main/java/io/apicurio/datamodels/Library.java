@@ -22,7 +22,7 @@ import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.apicurio.datamodels.compat.JsonCompat;
 import io.apicurio.datamodels.core.Constants;
 import io.apicurio.datamodels.core.diff.DiffContext;
-import io.apicurio.datamodels.core.diff.Oas30DiffVisitor;
+import io.apicurio.datamodels.core.diff.visitors.Oas30DiffVisitor;
 import io.apicurio.datamodels.core.factories.DocumentFactory;
 import io.apicurio.datamodels.core.factories.VisitorFactory;
 import io.apicurio.datamodels.core.io.DataModelReader;
